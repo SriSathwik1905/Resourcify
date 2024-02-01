@@ -15,12 +15,19 @@ def get_data():
 
 @app.route('/api/filter_skills')
 def filter_skills():
+    # Get skills from query parameters
     skill1 = request.args.get('skill1')
     skill2 = request.args.get('skill2')
 
-    filtered_data = data[data[['Skill 1', 'Skill 2', 'Skill 3']].apply(lambda row: skill1 in row.values and skill2 in row.values, axis=1)]
+    # Check if at least one skill is provided
+    if skill1 or skill2:
+        # Filter data based on the provided skill(s)
+        filtered_data = data[data[['Skill1', 'Skill2', 'Skill3']].apply(lambda row: (not skill1 or skill1 in row.values) and (not skill2 or skill2 in row.values), axis=1)]
+        return jsonify(filtered_data.to_dict(orient='records'))
+    else:
+        # If no skills are provided, return an error message or an appropriate response
+        return jsonify({"error": "At least one skill is required for filtering."})
 
-    return jsonify(filtered_data.to_dict(orient='records'))
 
 if __name__ == '__main__':
     app.run(debug=True)
