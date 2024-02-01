@@ -1,5 +1,4 @@
 // EmployeeCardGroup.tsx
-
 import React from 'react';
 import EmployeeCard from './EmployeeCard'; // Adjust the path based on your project structure
 
@@ -20,7 +19,7 @@ interface EmployeeCardGroupProps {
 
 const EmployeeCardGroup: React.FC<EmployeeCardGroupProps> = ({ employees }) => {
   return (
-    <div>
+    <div className='EmployeeCardGroup'>
       {employees.map((employee, index) => (
         <EmployeeCard
           key={index}
