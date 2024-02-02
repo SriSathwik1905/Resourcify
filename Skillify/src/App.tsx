@@ -4,21 +4,40 @@ import TaskListGroup from './components/TaskListGroup';
 
 const App = () => {
   const [employees, setEmployees] = useState([]);
-  const [skills, setSkills] = useState(['Problem Solving']); // Initial skill value
+  const [skills, setSkills] = useState([]); // Initial skill value
+  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null); // State for selected task ID
+  
 
-
-
-  const [mode, setMode] = useState('get_data'); // Default mode is 'get_data'
+  
+  const handleTaskClick = (id: number) => {
+    setSelectedTaskId(id);
+  };
 
   useEffect(() => {
     let apiUrl;
 
-    if (mode === 'get_data') {
-      apiUrl = 'http://localhost:5000/api/employee/get_data';
-    } else if (mode === 'filtered_data') {
+
+      // Construct the URL dynamically with the current skills
+      apiUrl = `http://localhost:5000/api/task/get_details/${selectedTaskId}`;
+
+
+    // Fetch data based on the constructed URL
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+         setSkills([data.MandatorySkills]);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  }, [selectedTaskId]);
+
+
+  useEffect(() => {
+    let apiUrl;
+
+
       // Construct the URL dynamically with the current skills
       apiUrl = `http://localhost:5000/api/employee/filter_skills?${skills.map((skill, index) => `skill${index + 1}=${encodeURIComponent(skill)}`).join('&')}`;
-    }
+
 
     // Fetch data based on the constructed URL
     fetch(apiUrl)
@@ -28,16 +47,14 @@ const App = () => {
         setEmployees(employeeData);
       })
       .catch(error => console.error('Error fetching data:', error));
-  }, [mode, skills]); // Include 'skills' in the dependency array to trigger the effect when skills change
+  }, [skills]); // Include 'skills' in the dependency array to trigger the effect when skills change
+
 
 
 
   return (
     <>
-      <div>
-      <div style={{ height: '400px', width: '400px', backgroundColor: 'gray' }}></div>
-        <TaskListGroup/>
-      </div>
+      <TaskListGroup/>
       <EmployeeCardGroup employees={employees}/>
     </>
   );

@@ -33,7 +33,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({ name,skill1,skill2,skill3,e
         </div>
       </div>
       <div className="vl"/>
-      <div className='cross'>X</div>
+      <div className='cross'>+</div>
     </div>
   );
 };

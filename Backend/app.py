@@ -55,9 +55,23 @@ def get_task_name():
     task = pd.read_excel('task.xlsx')
     
     # Assuming you have a Task model and a Task table in your database
-    tasks = task[['TaskName', 'Project']].to_dict(orient='records')
+    tasks = task[['TaskID','TaskName', 'Project']].to_dict(orient='records')
 
     return jsonify(tasks)
+
+@app.route('/api/task/get_details/<int:task_id>')
+def get_task_details(task_id):
+    # Reload data from Excel file before responding
+    global task
+    task = pd.read_excel('task.xlsx')
+
+    # Find the task with the given ID
+    task_details = task[task['TaskID'] == task_id].to_dict(orient='records')
+
+    if task_details:
+        return jsonify(task_details[0])
+    else:
+        return jsonify({"error": "Task not found"}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
