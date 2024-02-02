@@ -17,7 +17,7 @@ def get_data():
     employee = pd.read_excel('employee.xlsx')
     return jsonify(employee.to_dict(orient='records'))
 
-@app.route('/api/employee/filter_skills')
+@app.route('/api/employee/unassigned/filter_skills')
 def filter_skills():
     # Reload data from Excel file before processing the request
     global employee
@@ -29,17 +29,29 @@ def filter_skills():
 
     # Check if at least one skill is provided
     if skill1 or skill2:
-        # Filter employee based on the provided skill(s)
-        matching_data = employee[employee[['Skill1', 'Skill2', 'Skill3']].apply(lambda row: skill1 in row.values or skill2 in row.values, axis=1)]
-        remaining_data = employee.drop(matching_data.index)
+        # Filter employee based on the provided skill(s) and Assigned = 1
+        matching_data = employee[(employee[['Skill1', 'Skill2', 'Skill3']].apply(lambda row: skill1 in row.values or skill2 in row.values, axis=1)) & (employee['Assigned'] == 0)]
+        remaining_data = employee[(employee['Assigned'] == 0) & ~employee.index.isin(matching_data.index)]
+
         
         # Concatenate matching_data and remaining_data
         result_data = pd.concat([matching_data, remaining_data])
         
         return jsonify(result_data.to_dict(orient='records'))
     else:
-        # If no skills are provided, return all records
-        return jsonify(employee.to_dict(orient='records'))
+        # If no skills are provided, return all records with Assigned = 0
+        result_data = employee[employee['Assigned'] == 0]
+        return jsonify(result_data.to_dict(orient='records'))
+
+@app.route('/api/employee/assigned/')
+def assigned_skills():
+    # Reload data from Excel file before processing the request
+    global employee
+    employee = pd.read_excel('employee.xlsx')
+
+    result_data = employee[employee['Assigned'] != 0]
+    return jsonify(result_data.to_dict(orient='records'))
+
 
 @app.route('/api/task/get_data')
 def get_task_data():

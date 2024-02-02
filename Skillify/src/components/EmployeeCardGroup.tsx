@@ -15,9 +15,10 @@ interface Employee {
 
 interface EmployeeCardGroupProps {
   employees: Employee[];
+  symbol: string;
 }
 
-const EmployeeCardGroup: React.FC<EmployeeCardGroupProps> = ({ employees }) => {
+const EmployeeCardGroup: React.FC<EmployeeCardGroupProps> = ({ employees,symbol }) => {
   return (
     <div className='EmployeeCardGroup'>
       {employees.map((employee, index) => (
@@ -31,6 +32,7 @@ const EmployeeCardGroup: React.FC<EmployeeCardGroupProps> = ({ employees }) => {
           exp2={employee.Experience2}
           exp3={employee.Experience3}
           yearexp={employee.YearExp}
+          symbol={symbol}
         />
       ))}
     </div>

@@ -1,8 +1,13 @@
+// TaskListGroup.tsx
 import React, { useState, useEffect } from 'react';
 import TaskList from './TaskList';
 import TaskDetails from './TaskDetails';
 
-const TaskListGroup = () => {
+interface TaskListGroupProps {
+  onTaskClick: (id: number) => void;
+}
+
+const TaskListGroup: React.FC<TaskListGroupProps> = ({ onTaskClick }) => {
   const [tasks, setTasks] = useState([]);
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
 
@@ -21,24 +26,27 @@ const TaskListGroup = () => {
 
   const handleTaskClick = (id: number) => {
     setSelectedTaskId(id);
+    // Propagate the selected task ID to the parent component (App)
+    if (onTaskClick) {
+      onTaskClick(id);
+    }
   };
 
   return (
-    
     <div className="taskArea">
       <TaskDetails id={selectedTaskId} />
       <div className="taskContainer">
         <div className='TaskListGroup'>
           {tasks.map((task: object, index: number) => (
-            <>
+            <React.Fragment key={index}>
               <TaskList
-                id={task.TaskID} // Assuming you have an 'id' property in your task object
+                id={task.TaskID}
                 name={task.TaskName}
                 project={task.Project}
                 onClick={handleTaskClick}
               />
               <hr />
-            </>
+            </React.Fragment>
           ))}
         </div>
       </div>

@@ -11,9 +11,10 @@ interface EmployeeCardProps {
   exp3: number;
   yearexp: number;
   key: number;
+  symbol: string;
 }
 
-const EmployeeCard: React.FC<EmployeeCardProps> = ({ name,skill1,skill2,skill3,exp1,exp2,exp3,yearexp }) => {
+const EmployeeCard: React.FC<EmployeeCardProps> = ({ name,skill1,skill2,skill3,exp1,exp2,exp3,yearexp,symbol }) => {
   return (
     <div className='EmployeeCard'>
       <div className="data-wraper">
@@ -33,7 +34,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({ name,skill1,skill2,skill3,e
         </div>
       </div>
       <div className="vl"/>
-      <div className='cross'>+</div>
+      <div className='cross'>{symbol}</div>
     </div>
   );
 };

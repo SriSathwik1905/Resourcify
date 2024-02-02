@@ -36,6 +36,10 @@
   
 }
 
+*{
+  transition: all ease-in 0.7s;
+}
+
 ::-webkit-scrollbar {
   border-radius: 5px;
   background-color: white;
